@@ -9,10 +9,15 @@ function Bank(bankName) {
   return {
     bankName: bankName,
     bankAccount: [],
-    openAccount: function(name) {
+    openAccount: function(client) {
       var newBankAccount = Client(name, this);
       this.bankAccount.push(newBankAccount);
       return newBankAccount;
+    },
+
+    closeAccount: function(card) {
+      var deleteCard = Card(amount, client, this)
+      this.bankAccount.splice(deleteCard);
     }
 
   }
@@ -31,40 +36,57 @@ function Bank(bankName) {
 //      объект карты, пинкод от карты и новый пинкод. Если пинкод карты не совпадает
 //      с тем, что был передан в метод, то вывести сообщение)
 
-function Bankomat(bankName, totalBankomatSum){
+function Bankomat(bankName, sumInBankomat){
   return {
     bankName: bankName,
-    totalBankomatSum: totalBankomatSum,
+    sumInBankomat: sumInBankomat,
     withdraw: function(card, sum) {
-      if (card.sum > totalBankomatSum) {
+      if (card.sum > sumInBankomat) {
         console.log("there is not enough money in the ATM");
-        return
+        return;
+      }
+      if (card.bankName != bankName){
+        console.log("its card of another bank");
       }
     },
     add: function(card, sum) {
-      if (card.sum > totalBankomatSum) {
+      if (card.sum > sumInBankomat) {
         console.log("there is not enough money in the ATM");
       }
     },
-    // changePIN: function(card, pin, newPIN){
-    //   if (new)
-
+    changePIN: function(card, oldPin, newPin){
+      if (card.pin != oldPin){
+        console.log("It's wrong pincode");
+      } else {
+        card.pin = newPin;
+        return newPin;
+      }
+    }
   }
 }
-
 // - Банковская карточка (счет: integer, баланс: float, пинкод: string, владелец:
 //   класс Client, банк: класс Bank)
 //     методы:
 //          transferMoney(card, amount) - переводит с одной карты на другую.
 //     ВАЖНО! - при переводе деньги с объекта снимаются, а в другой объект добавляются
-function Card(amount, balance, pin) {
+function Card(amount, balance, pin, client, bank) {
   return {
     amount: amount,
     balance: balance,
-    pin: pin
-    // transferMoney: function(card, amount){
-    //
-    // }
+    pin: pin,
+    client: client,
+    bank: bank,
+    moneyAmount: 0,
+
+    addMoney: function(money) {
+      this.moneyAmount += money;
+    },
+    withdrawMoney: function(money) {
+      this.moneyAmount -= money;
+    },
+    transferMoney: function(card, amount){
+
+    }
   }
 }
 
@@ -75,23 +97,28 @@ function Client(name) {
   return {
     name: name,
     cards: [],
-    // showTotalBalance: function{
-    //
+    addCard: function(amount, balance, pin, client, bank) {
+      var card = Card(amount, balance, pin, client, bank, this)
+      this.cards.push(card);
+    }
+    // showTotalBalance: function(){
+    //   var balance = 0;
+    //   for (var i = 0; i < this.cards.length; i++) {
+    //     balance += this.cards[i];
+    //   }
+    //   return balance;
     // }
   }
 }
 
 
 var privat = Bank('PrivatBank');
-console.log(privat);
+var otp = Bank('OTPBank');
 
-var atm = Bankomat('PrivatBank', 10000);
-console.log(atm);
+
+var atm1 = Bankomat('PrivatBank', 10000);
+var atm2 = Bankomat('OTP', 5000);
+
 
 var steve = Client('Steve');
-console.log(steve);
-
-var card1 = Card(1234, 500, '2222');
-console.log(card1);
-
-steve.openAccount('Steve')
+privat.openAccount(steve);
