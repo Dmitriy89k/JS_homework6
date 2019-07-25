@@ -102,11 +102,7 @@ function Client(name) {
       this.cards.push(card);
     }
     // showTotalBalance: function(){
-    //   var balance = 0;
-    //   for (var i = 0; i < this.cards.length; i++) {
-    //     balance += this.cards[i];
-    //   }
-    //   return balance;
+    //  
     // }
   }
 }
